@@ -14,7 +14,7 @@ import win32print
 import win32api
 import time as time_old
 from subprocess import Popen
-import jinja2
+#import jinja2
 from FacturasClient import FacturaClient as Factura
 import math
 import json
