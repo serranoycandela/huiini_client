@@ -1,14 +1,8 @@
 #-*- encoding: utf-8 -*-
-from jinja2 import Template
 import xml.etree.ElementTree as etree  
 import os
-import jinja2
-from subprocess import Popen
 import codecs
 import sys
-from contextlib import contextmanager
-
-
 
 class FacturaClient(object):
     
