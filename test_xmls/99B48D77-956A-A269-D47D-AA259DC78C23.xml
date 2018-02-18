@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<cfdi:Comprobante version="3.2" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" serie="AB" folio="224931" fecha="2015-06-16T13:43:32" sello="g4Ya2ndSaZl33TGYHNAGeLGSml80fHYSp/DkmXoUUjmRngRl0vbx5JTkUqPbi7VyUP0hMhL4yGE7DbpcnyocBv7rAtdMp2NcNq/BjpNCxSdtUYrVwMH4D2cIirtF/9MuzMD54CyeA+5aF+Cq5xp2LqfGA3GgnFlp9OLEWJPaGq8=" formaDePago="PAGO EN UNA SOLA EXHIBICION" noCertificado="00001000000200915340" certificado="MIIEuTCCA6GgAwIBAgIUMDAwMDEwMDAwMDAyMDA5MTUzNDAwDQYJKoZIhvcNAQEFBQAwggGVMTgwNgYDVQQDDC9BLkMuIGRlbCBTZXJ2aWNpbyBkZSBBZG1pbmlzdHJhY2nDs24gVHJpYnV0YXJpYTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExODA2BgNVBAsML0FkbWluaXN0cmFjacOzbiBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpw7NuMSEwHwYJKoZIhvcNAQkBFhJhc2lzbmV0QHNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxFDASBgNVBAcMC0N1YXVodMOpbW9jMRUwEwYDVQQtEwxTQVQ5NzA3MDFOTjMxPjA8BgkqhkiG9w0BCQIML1Jlc3BvbnNhYmxlOiBDZWNpbGlhIEd1aWxsZXJtaW5hIEdhcmPDrWEgR3VlcnJhMB4XDTEyMDQyNTE4NTIyM1oXDTE2MDQyNTE4NTIyM1owgfoxMTAvBgNVBAMTKERFUE9TSVRPIERFTlRBTCBWSUxMQSBERSBDT1JURVMgU0EgREUgQ1YxMTAvBgNVBCkTKERFUE9TSVRPIERFTlRBTCBWSUxMQSBERSBDT1JURVMgU0EgREUgQ1YxMTAvBgNVBAoTKERFUE9TSVRPIERFTlRBTCBWSUxMQSBERSBDT1JURVMgU0EgREUgQ1YxJTAjBgNVBC0THEREVjg5MDExOUhDOSAvIFNBQkU2NzA0MTZHOTMxHjAcBgNVBAUTFSAvIFNBQkU2NzA0MTZIREZGUkwwMjEYMBYGA1UECxMPVklMTEEgREUgQ09SVEVTMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDB32duMXF3C59wKzHPchbK0LG0PhrayZ/hHYFDqeOT0OUWYXhJa3xvxLoLMX8DG5PYJPzm51bsk7gsynKB2/6uCkIVZzWuYMgPxmcJ7e4dnfwgwTrqIqhvc9+jXT8GMYyLif74RlEdFivrq6rmMDyLdmlcKzz77LCeTdoIeE8imQIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQUFAAOCAQEAWUnEt5ZeSL9jCvlzqdI2RE39dxX8IFo2rcY7Aw4u6N6M0iUu2ixQq+DNkv+xSTvemeBavXUEhnazzO95vC0z2qgFR+KR2QlvUOddY0TcMm4nMl7U9BV0HwNHeaIXmWkXw2gmBphUT24ac+VmjHlhG/Qz/y1qN2bzjcJK6Po5x5YSGanp4clX/aekO6N/Z+QPXyBu97SKZU5jdcfDlH7qIJvT5EgNEJjbRiK8XJCFF4ilncu3BVSbVHcu91wY3hc6kLis1pMEEaB8Iv1j4VS9z1LJ2WB/EctQblD5RdFMIvm64qB+gG3+8leTzxqwPtyHCY/EJHd6RSPpw7rLEhK/Vg==" subTotal="865.86" descuento="0.00" Moneda="MXN" total="1004.40" metodoDePago="NO IDENTIFICADO" tipoDeComprobante="ingreso" LugarExpedicion="Villa de Cortes, Distrito Federal" NumCtaPago="9936" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+<cfdi:Emisor rfc="DDV890119HC9" nombre="Deposito Dental Villa de Cortes, S.A. de C.V.">
+<cfdi:DomicilioFiscal calle="Calzada de Tlalpan" noExterior="836" colonia="Villa de Cortes" municipio="Benito Juarez" estado="Distrito Federal" pais="México" codigoPostal="03530" />
+<cfdi:ExpedidoEn calle="Calzada de Tlalpan" noExterior="836" colonia="Villa de Cortes" municipio="Benito Juarez" estado="Distrito Federal" pais="México" codigoPostal="03530" />
+<cfdi:RegimenFiscal Regimen="REGIMEN GENERAL DE LEY PERSONAS MORALES" />
+</cfdi:Emisor>
+<cfdi:Receptor rfc="ROGE781005PS6" nombre="ERICK ANDRES ROJAS GONZALEZ">
+<cfdi:Domicilio calle="SERIS MZ 3 LT 43 LC 2" colonia="CTM SECC 1" municipio="Coyoacán" estado="Distrito Federal" pais="México" codigoPostal="04480" />
+</cfdi:Receptor>
+<cfdi:Conceptos>
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 801-016 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 802-014 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 837-012 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 847-014 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 862-012 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 880-012 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 884-012 MDT" valorUnitario="7.31" importe="21.93" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 877/012" valorUnitario="12.17" importe="36.52" />
+<cfdi:Concepto cantidad="3.00" unidad="PZA" descripcion="FRESA DIAMANTE 847/018" valorUnitario="12.17" importe="36.52" />
+<cfdi:Concepto cantidad="1.00" unidad="PZA" descripcion="I-RaCe SUIZO 15, 25 Y 30 25Mm C/3 FKG" valorUnitario="282.07" importe="282.07">
+<cfdi:InformacionAduanera numero="134723183000365" fecha="2013-08-22" aduana="47" />
+</cfdi:Concepto>
+<cfdi:Concepto cantidad="1.00" unidad="PZA" descripcion="LIMAS k-FILE 15-40 25 MM***" valorUnitario="137.24" importe="137.24" />
+<cfdi:Concepto cantidad="1.00" unidad="PZA" descripcion="LIMAS K-FLEX 15-40 25MM***&amp;&amp;&amp;&amp;&amp;" valorUnitario="137.24" importe="137.24" />
+<cfdi:Concepto cantidad="2.00" unidad="PZA" descripcion="CAMPOS BOLSA C/50 MEDICOM" valorUnitario="17.24" importe="34.48" />
+<cfdi:Concepto cantidad="2.00" unidad="PZA" descripcion="PINZA MOSCO RECTA 12.5 CM ARAIN" valorUnitario="24.14" importe="48.28" />
+</cfdi:Conceptos>
+<cfdi:Impuestos totalImpuestosTrasladados="138.54">
+<cfdi:Traslados>
+<cfdi:Traslado impuesto="IVA" importe="138.54" tasa="16.00" />
+</cfdi:Traslados>
+</cfdi:Impuestos>
+<cfdi:Complemento>
+<tfd:TimbreFiscalDigital FechaTimbrado="2015-06-16T13:57:21" UUID="80D2EDE6-2DBB-BF65-2C76-638F617B00AD" noCertificadoSAT="00001000000203392777" selloCFD="g4Ya2ndSaZl33TGYHNAGeLGSml80fHYSp/DkmXoUUjmRngRl0vbx5JTkUqPbi7VyUP0hMhL4yGE7DbpcnyocBv7rAtdMp2NcNq/BjpNCxSdtUYrVwMH4D2cIirtF/9MuzMD54CyeA+5aF+Cq5xp2LqfGA3GgnFlp9OLEWJPaGq8=" selloSAT="IhUkkAamAzFB1lP5DbCZrdXljBjoTwgjTDC/9RKKgEuCtLfhE0V3tzY5metmkaHcK94/6dI1mItyWTJesIvk488ConJNkLlXah5nsm4vjbZHrkpwQtmphYGh5fTipNMWhftAMsmfwjH7CCntVIUTu5gaNymY8BJI4okmwOX8R8g=" version="1.0" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" />
+</cfdi:Complemento>
+</cfdi:Comprobante>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3" version="3.2" folio="45814" fecha="2015-03-25T10:02:39" sello="V7ifiS7c9/g/tWvXSzpHZX3FBA/sWdTRNLOnDekG+hqUHWFl5obmIDa0Jz4hOXrbI9Y7Ce0wjFcja5ncKBilpEZTokchZkwp2obHYhOchuQRaFhHnL6CqNZsPsVG0CpkjTufJ/xdue+nSvMHNeOAtkbagTtMcMsavHEQ2KEw3hg=" formaDePago="Pago en una sola exhibición" noCertificado="00001000000201243487" certificado="MIIEcTCCA1mgAwIBAgIUMDAwMDEwMDAwMDAyMDEyNDM0ODcwDQYJKoZIhvcNAQEFBQAwggGVMTgwNgYDVQQDDC9BLkMuIGRlbCBTZXJ2aWNpbyBkZSBBZG1pbmlzdHJhY2nDs24gVHJpYnV0YXJpYTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExODA2BgNVBAsML0FkbWluaXN0cmFjacOzbiBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpw7NuMSEwHwYJKoZIhvcNAQkBFhJhc2lzbmV0QHNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxFDASBgNVBAcMC0N1YXVodMOpbW9jMRUwEwYDVQQtEwxTQVQ5NzA3MDFOTjMxPjA8BgkqhkiG9w0BCQIML1Jlc3BvbnNhYmxlOiBDZWNpbGlhIEd1aWxsZXJtaW5hIEdhcmPDrWEgR3VlcnJhMB4XDTEyMDYwMTE0NDQzNVoXDTE2MDYwMTE0NDQzNVowgbIxIjAgBgNVBAMTGUNFU0FSIFJBTU9OIENBTVBPUyBDQU1QT1MxIjAgBgNVBCkTGUNFU0FSIFJBTU9OIENBTVBPUyBDQU1QT1MxIjAgBgNVBAoTGUNFU0FSIFJBTU9OIENBTVBPUyBDQU1QT1MxFjAUBgNVBC0TDUNBQ0M3NDA2MTNNNTcxGzAZBgNVBAUTEkNBQ0M3NDA2MTNISkNNTVMwMzEPMA0GA1UECxMGVU5JREFEMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCre77VKLmDFbeHqJaj39ouezZX+SUP155roNopOfugdBmebajQILXzWZxbL0zxXWz5uscRuA0najPzfBdUdDLU55kgTzHHYzIrIfTM8d1JrGn/CHw5yOQ3y9Gf+4fozYEvYA9Ui7ICiTgvnnDUXwRWlSs3F2GPV1Uy38lmBR/gZwIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQUFAAOCAQEAjFBlRxk02sw5QU8Eci/3WGgN67EPIqIUtbT4LX6/+LC6B19SKdBhAmHaiU/QbwvoNLYaOEIQwMpFIw0WH9rH8ggxhgRIUMvbEuyDaO7HMjT9aoWsBNgoGzKztB4l4CRRvv2VPaFMOyYmGp2abk2yyX2kFFcG3yRB/73CZvuusRe8kgaGjNJDgW09tkwERNLnCqG7SkhCXw6vZGPMiyVMUH4Hsoe6uqRPIRBwaqP/8Qk+zJ9k32vn9AkycTLR7iqqqheK2FBAtEBnZseriSCeZTmcmB+sNyW565dKvz5yOoWvVp03vpeTxHuZx6RGeESxcCjhbuzfeO7LicGkW9nUgg==" subTotal="3256.80" descuento="325.68" TipoCambio="1.00" Moneda="MXN" total="3400.10" metodoDePago="No aplica" LugarExpedicion="GUADALAJARA, JALISCO" NumCtaPago="No aplica" tipoDeComprobante="ingreso">
+  <cfdi:Emisor rfc="CACC740613M57" nombre="CESAR_CAMPOS_CAMPOS_2015">
+    <cfdi:DomicilioFiscal calle="MERCADO DE ABASTOS" noExterior="1554" colonia="MERCADO DE ABASTOS" municipio="GUADALAJARA" estado="JALISCO" pais="MEXICO" codigoPostal="44530" />
+    <cfdi:RegimenFiscal Regimen="Régimen personas físicas actividad empresarial y profesional" />
+  </cfdi:Emisor>
+  <cfdi:Receptor rfc="LOCC6711213VA" nombre="CARLOS LOPEZ CID DEL PRADO">
+    <cfdi:Domicilio calle="CEREZO DE CAYENA" noExterior="112" colonia="EL FORTIN" municipio="ZAPOPAN" estado="JALISCO" pais="MEXICO" codigoPostal="45066" />
+  </cfdi:Receptor>
+  <cfdi:Conceptos>
+    <cfdi:Concepto cantidad="75" unidad="PAQUE" noIdentificacion="289" descripcion="BOLSA P/BASURA JUMBO C/25 K." valorUnitario="16.284" importe="1221.30">
+    </cfdi:Concepto>
+    <cfdi:Concepto cantidad="75" unidad="PAQUE" noIdentificacion="375" descripcion="BOLSA P/BASURA 70X90 C/25 K." valorUnitario="16.284" importe="1221.30">
+    </cfdi:Concepto>
+    <cfdi:Concepto cantidad="50" unidad="PAQUE" noIdentificacion="117" descripcion="BOLSA P/BASURA 50X70 C/25 K." valorUnitario="16.284" importe="814.20">
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos totalImpuestosTrasladados="468.98">
+    <cfdi:Traslados>
+      <cfdi:Traslado impuesto="IVA" tasa="16.00" importe="468.98" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+
+<cfdi:Complemento> <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" UUID="42CC853E-2BAC-2542-900D-6FCD0E418B41" FechaTimbrado="2015-03-25T10:03:01" selloCFD="V7ifiS7c9/g/tWvXSzpHZX3FBA/sWdTRNLOnDekG+hqUHWFl5obmIDa0Jz4hOXrbI9Y7Ce0wjFcja5ncKBilpEZTokchZkwp2obHYhOchuQRaFhHnL6CqNZsPsVG0CpkjTufJ/xdue+nSvMHNeOAtkbagTtMcMsavHEQ2KEw3hg=" noCertificadoSAT="00001000000200011997" selloSAT="f0932vQGh6qVtVPn4hXWtXa2i33+3sTudJuT4MDlEjwr7mTz+XxBA04/SL7ZhzkSJ2MuWF70vW490X4Vh5zuJ0crnOGxuIrebTms23I4G8iJc6IJWzXS/iirQOUhWreZVMVbuxqUSr40Ib4q57ZP3228RW2B7Azrxy9no+tMlSw=" />
+</cfdi:Complemento>
+</cfdi:Comprobante>

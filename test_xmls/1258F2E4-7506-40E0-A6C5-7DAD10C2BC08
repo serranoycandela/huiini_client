@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{geometry}
+\geometry{
+ a4paper,
+ left=10mm,
+ right=0mm,
+ top=20mm,
+ bottom=0mm,
+ hoffset=0mm
+}
+\begin{document}
+rfc-emisor: \colorbox{yellow}{AME900126RZ5}\\
+nombre-emisor: AMWAY DE MEXICO, S. de R.L. de C.V.\\
+tipoDeComprobante: \colorbox{yellow}{ingreso}\\
+folio: \colorbox{yellow}{7043667}\\
+serie: \colorbox{yellow}{FEC}\\
+regimen-emisor: Regimen General de Ley Personas Morales\\
+LugarExpedicion: DEL BENITO JUARE, DISTRITO FEDERAL\bigskip
+\\rfc-receptor: \colorbox{yellow}{SOCH680630KK6}\\
+nombre-receptor: SOTO CORIA HELIDA\bigskip
+\\Conceptos:\\
+\begin{tabular}{|p{10cm}|c|c|c|c|}
+\hline
+Descripcion & Cantidad & Unidad & Valor unitario & Importe\\
+\hline
+STARTER KIT 2015 & 1 & PZA & 257.76 & 257.76\\
+\hline
+\end{tabular}\\
+Impuestos:\\
+\begin{tabular}{|c|c|c|}
+\hline
+Impuesto & Tasa & Importe\\
+\hline
+IVA & 16.00 & 41.24\\
+\hline
+IEPS & 25.00 & 0.00\\
+\hline
+IEPS & 25.00 & 0.00\\
+\hline
+Cuota IEPS & 0.00 & 0.00\\
+\hline
+Total de Traslados Loc &  & 0\\
+\hline
+Total de Retenciones Loc &  & 0.00\\
+\hline
+subTotal &  & 257.76\\
+\hline
+totalImpuestosTrasladados &  & 41.24\\
+\hline
+Total &  & \colorbox{yellow}{299.00}\\
+\hline
+\end{tabular}\\
+\end{tabular}\\
+formaDePago: PAGO EN UNA SOLA EXHIBICION\\
+metodoDePago: \colorbox{yellow}{No Identificado}\\
+UUID: \colorbox{yellow}{1258F2E4-7506-40E0-A6C5-7DAD10C2BC08}\\
+\bigskip
+fechaTimbrado: \colorbox{yellow}{2015-02-17T18:36:27}\\
+selloCFD: e79v08N3nQpS3JK1DGSz7gYF6pWv79nWVhX5R5TTOFwHHyzZFw...\\
+noCertificadoSAT: 00001000000201455572\\
+selloSAT: QU0LtCHSIEqmc87hnhDeRDv+WS0GRyD8NEBoKCxr5wJzTtyOKG...\\
+sello: e79v08N3nQpS3JK1DGSz7gYF6pWv79nWVhX5R5TTOFwHHyzZFw...\\
+certificado: MIIEkjCCA3qgAwIBAgIUMDAwMDEwMDAwMDAyMDI1MzMzNzYwDQ...\bigskip\bigskip\bigskip\bigskip\bigskip\bigskip
+\\Esta es una representacion grafica del XML:  1258F2E4-7506-40E0-A6C5-7DAD10C2BC08\\
+\end{document}
