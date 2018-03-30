@@ -1,3 +1,8 @@
-
+test_xmls/*
 *.pyc
 *.zip
+
+PySide-1.2.4
+venv
+
+*.xml
