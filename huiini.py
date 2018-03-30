@@ -14,14 +14,20 @@ import win32print
 import win32api
 import time as time_old
 from subprocess import Popen
-#import jinja2
+import jinja2
 from FacturasClient import FacturaClient as Factura
 import math
 import json
+from requests.auth import HTTPBasicAuth
 
 
 ##pyside-uic mainwindow.ui -o gui.py
 ##pyside-uic mainwindowV2.ui -o guiV2.py
+# class checaMe(requests.auth.AuthBase):
+#     def __call__(self, r):
+#         # Implement my authentication
+#         return r
+
 class ImgWidget1(QtGui.QLabel):
 
     def __init__(self, parent=None):
@@ -35,7 +41,48 @@ class ImgWidget2(QtGui.QLabel):
         super(ImgWidget2, self).__init__(parent)
         pic = QtGui.QPixmap("x.png")
         self.setPixmap(pic)
+        
+class MyPopup(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+        self.labelU = QLabel("user name")
+        layout.addWidget(self.labelU)
+        self.username = QLineEdit()
+        layout.addWidget(self.username)
 
+        self.labelP = QLabel("password")
+        layout.addWidget(self.labelP)
+        self.password = QLineEdit()
+        layout.addWidget(self.password)
+        # Create the button
+        self.btn = QPushButton('Login')
+        layout.addWidget(self.btn)
+         
+        # Connect its clicked signal to our slot
+        self.btn.clicked.connect(self.clicked_slot)
+        self.setWindowModality(Qt.ApplicationModal)
+        self.raise_()
+        self.activateWindow()
+        
+    @Slot()
+    def clicked_slot(self):
+        ''' This is called when the button is clicked. '''
+        print(self.username.text(), self.password.text())
+        url = "http://192.168.15.29:8000/cuenta"
+        r = requests.post (url, auth=(self.username.text(), self.password.text()))
+        if str(r.status_code).startswith("3") or str(r.status_code).startswith("2"):
+            self.hide()
+        else:
+            print("nelson")
+        
+        
+#     def paintEvent(self, e):
+#         dc = QPainter(self)
+#         dc.drawLine(0, 0, 100, 100)
+#         dc.drawLine(100, 0, 0, 100)
+#         
 class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
     
     def __init__(self, parent=None):
@@ -95,6 +142,13 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.tableWidget_xml.cellDoubleClicked.connect(self.meDoblePicaronXML)
         self.tableWidget_resumen.cellDoubleClicked.connect(self.meDoblePicaronResumen)
         
+    
+    def doit(self):
+        print ("Opening a new popup window...")
+        self.w = MyPopup()
+        self.w.setGeometry(QRect(100, 100, 400, 200))
+        self.w.show()  
+          
     def getTemplate(self,tpl_path):
             path, filename = os.path.split(tpl_path)
             return jinja2.Environment(
@@ -151,9 +205,10 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         for key, value in self.diccionarioPorRFCs.items():
             print(key, value)
             
-        url_get = "http://huiini.pythonanywhere.com/resumen"
+        #url_get = "http://huiini.pythonanywhere.com/resumen"
+        url_get = "http://192.168.15.29:8000/resumen"
         
-        r = requests.get(url_get, params={'lista_diot': json.dumps(self.listaDiot)}, stream=True)
+        r = requests.get(url_get, params={'lista_diot': json.dumps(self.listaDiot)}, stream=True, auth=('cliente1','holahola'))
         time_old.sleep(1)
         if r.status_code == 200:
             with open(join(self.esteFolder, 'resumenDiot.pdf'),'wb') as f:
@@ -353,6 +408,8 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         item.setToolTip(tooltip)  
         item.setFlags(item.flags() ^ Qt.ItemIsEditable)  
         return item
+
+
     def cualCarpeta(self):
         self.folder.hide()
         esteFileChooser = QFileDialog()
@@ -415,28 +472,31 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 factura.setFolio(contador + 1)
                 pd.setLabelText("Procesando: " + factura.UUID[:17] + "...")
                 
-                url = "http://huiini.pythonanywhere.com/upload"
+                #url = "http://huiini.pythonanywhere.com/upload"
+                url = "http://192.168.15.29:8000/upload"
+                
                 ####################################################Definir puerto  80 80   ################################
                 xml_path = factura.xml_path
                 
                 #xml_path = 'C:/Users/SICAD/Dropbox/Araceli/2017/JUNIO/EGRESOS/DE820CD4-2F37-4751-9D38-0FD6947CB287.xml'
                 files = {'files': open(xml_path , 'rb')}
-                r = requests.post (url, files=files)
+                r = requests.post (url, files=files, auth=('cliente1', 'holahola'))
                 # print(r.content)
                 # print(r.text)
                 xml_name = basename(factura.xml_path)
-                url_get = "http://huiini.pythonanywhere.com/download"
+                
+                url_get = "http://192.168.15.29:8000/download"
+                #url_get = "http://huiini.pythonanywhere.com/download"
                 ###################################################Definir puerto 80 80, ip publica,  ################################
                 
-                if r.text == "ya":
+                
                         
-                    r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name, 'folio': contador + 1}, stream=True)
-                    if r.status_code == 200:
-                        with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
-                            r.raw.decode_content = True
-                            shutil.copyfileobj(r.raw, f)
-                    else:
-                        print("este no pude")         
+                r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name, 'folio': contador + 1}, stream=True, auth=('cliente1', 'holahola'))
+                if r.status_code == 200:
+                    with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
+                        r.raw.decode_content = True
+                        shutil.copyfileobj(r.raw, f)
+                           
                 self.tableWidget_xml.setItem(contador,1,self.esteItem(factura.fechaTimbrado,factura.fechaTimbrado))
                 self.tableWidget_xml.setItem(contador,2,self.esteItem(factura.UUID,factura.UUID))
                 self.tableWidget_xml.setItem(contador,3,self.esteItem(factura.ReceptorRFC,factura.ReceptorNombre))
@@ -550,5 +610,6 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 app = QApplication(sys.argv)
 form = Ui_MainWindow()
 form.show()
+form.doit()
 
 app.exec_()
