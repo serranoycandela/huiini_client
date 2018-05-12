@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "huiini.py", line 393, in cualCarpeta
+TypeError: Unicode-objects must be encoded before hashing
+Traceback (most recent call last):
+  File "huiini.py", line 580, in cualCarpeta
+AttributeError: 'Ui_MainWindow' object has no attribute 'esteFolder'

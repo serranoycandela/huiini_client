@@ -19,6 +19,9 @@ from FacturasClient import FacturaClient as Factura
 import math
 import json
 from requests.auth import HTTPBasicAuth
+from datetime import datetime
+import hashlib
+
 
 
 ##pyside-uic mainwindow.ui -o gui.py
@@ -28,20 +31,22 @@ from requests.auth import HTTPBasicAuth
 #         # Implement my authentication
 #         return r
 
+url_server = "http://192.168.15.13:8008"
+#url_server = "http://huiini.pythonanywhere.com"
 class ImgWidget1(QtGui.QLabel):
 
     def __init__(self, parent=None):
         super(ImgWidget1, self).__init__(parent)
         pic = QtGui.QPixmap("palomita.png")
         self.setPixmap(pic)
-        
+
 class ImgWidget2(QtGui.QLabel):
 
     def __init__(self, parent=None):
         super(ImgWidget2, self).__init__(parent)
         pic = QtGui.QPixmap("x.png")
         self.setPixmap(pic)
-        
+
 class MyPopup(QWidget):
     def __init__(self):
         QWidget.__init__(self)
@@ -59,46 +64,46 @@ class MyPopup(QWidget):
         # Create the button
         self.btn = QPushButton('Login')
         layout.addWidget(self.btn)
-         
+
         # Connect its clicked signal to our slot
         self.btn.clicked.connect(self.clicked_slot)
         self.setWindowModality(Qt.ApplicationModal)
         self.raise_()
         self.activateWindow()
-        
+
     @Slot()
     def clicked_slot(self):
         ''' This is called when the button is clicked. '''
         print(self.username.text(), self.password.text())
-        url = "http://192.168.15.29:8000/cuenta"
+        url =  "%s/cuenta" % url_server
         r = requests.post (url, auth=(self.username.text(), self.password.text()))
         if str(r.status_code).startswith("3") or str(r.status_code).startswith("2"):
             self.hide()
         else:
             print("nelson")
-        
-        
+
+
 #     def paintEvent(self, e):
 #         dc = QPainter(self)
 #         dc.drawLine(0, 0, 100, 100)
 #         dc.drawLine(100, 0, 0, 100)
-#         
+#
 class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
-    
+
     def __init__(self, parent=None):
         super(Ui_MainWindow, self).__init__(parent)
         self.setupUi(self)
-        
+
         logoPix = QtGui.QPixmap("logo.png")
         self.labelLogo.setPixmap(logoPix)
         self.pdflatex_path = "C:/Program Files/MiKTeX 2.9/miktex/bin/x64/pdflatex.exe"
-        
+
         self.carpetaChooser.clicked.connect(self.cualCarpeta)
         self.imprimir.clicked.connect(self.imprime)
-        
+
         self.impresora.clicked.connect(self.cambiaImpresora)
         self.listaDeImpresoras.currentItemChanged.connect(self.cambiaSeleccionDeImpresora)
-                
+
         self.tableWidget_xml.setColumnCount(16)
         self.tableWidget_xml.setColumnWidth(0,30)#pdf
         self.tableWidget_xml.setColumnWidth(1,95)#fecha
@@ -116,9 +121,9 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.tableWidget_xml.setColumnWidth(13,80)#total
         self.tableWidget_xml.setColumnWidth(14,74)#formaDePago
         self.tableWidget_xml.setColumnWidth(15,77)#metodoDePago
-        
+
         self.tableWidget_xml.verticalHeader().setFixedWidth(35)
-        
+
         self.tableWidget_resumen.setColumnCount(10)
         self.tableWidget_resumen.setColumnWidth(0,30)
         self.tableWidget_resumen.setColumnWidth(1,152)
@@ -132,30 +137,30 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.tableWidget_resumen.setColumnWidth(9,80)
         self.tableWidget_resumen.setRowCount(2)
         #self.tableWidget_resumen.verticalHeader().setFixedWidth(35)
-        
+
         header = self.tableWidget_xml.verticalHeader()
         header.setContextMenuPolicy(Qt.CustomContextMenu)
         header.customContextMenuRequested.connect(self.handleHeaderMenu)
- 
+
         self.ponEncabezado()
 
         self.tableWidget_xml.cellDoubleClicked.connect(self.meDoblePicaronXML)
         self.tableWidget_resumen.cellDoubleClicked.connect(self.meDoblePicaronResumen)
-        
-    
+
+
     def doit(self):
         print ("Opening a new popup window...")
         self.w = MyPopup()
         self.w.setGeometry(QRect(100, 100, 400, 200))
-        self.w.show()  
-          
+        self.w.show()
+
     def getTemplate(self,tpl_path):
             path, filename = os.path.split(tpl_path)
             return jinja2.Environment(
                 loader=jinja2.FileSystemLoader(path or './')
-            ).get_template(filename)    
-        
-        
+            ).get_template(filename)
+
+
     def hazResumenDiot(self,currentDir):
         sumaSubTotal = 0
         sumaDescuento = 0
@@ -168,9 +173,9 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             sumaTrasladoIVA += value['trasladoIVA']
             sumaImporte += value['importe']
             sumaTotal += value['total']
-         
+
         self.listaDiot = []
-        
+
         contador = 0
         tablaIndex = 0
         listaAcotada = []
@@ -181,57 +186,57 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 tablaIndex +=1
                 self.listaDiot.append(listaAcotada)
                 listaAcotada = []
-            
-                
+
+
             listaAcotada.append({'rfc' : key,
-                                   'subTotal': value['subTotal'], 
-                                   'descuento': value['descuento'], 
+                                   'subTotal': value['subTotal'],
+                                   'descuento': value['descuento'],
                                    'trasladoIVA': value['trasladoIVA'],
                                    'importe': value['importe'],
                                    'total': value['total']
                                     })
-        
-            
+
+
         listaAcotada.append({'rfc' : 'Suma',
-                               'subTotal': sumaSubTotal, 
-                               'descuento': sumaDescuento, 
+                               'subTotal': sumaSubTotal,
+                               'descuento': sumaDescuento,
                                'trasladoIVA': sumaTrasladoIVA,
                                'importe': sumaImporte,
                                 'total': sumaTotal
-                                })    
-        
+                                })
+
         self.listaDiot.append(listaAcotada)
-         
+
         for key, value in self.diccionarioPorRFCs.items():
             print(key, value)
-            
+
         #url_get = "http://huiini.pythonanywhere.com/resumen"
-        url_get = "http://192.168.15.29:8000/resumen"
-        
-        r = requests.get(url_get, params={'lista_diot': json.dumps(self.listaDiot)}, stream=True, auth=('cliente1','holahola'))
+        url_get =  "%s/resumen/%s/" % (url_server, self.hash_carpeta)
+
+        r = requests.get(url_get, params={'lista_diot': json.dumps(self.listaDiot)}, stream=True, auth=(self.w.username.text(), self.w.password.text()))
         time_old.sleep(1)
         if r.status_code == 200:
             with open(join(self.esteFolder, 'resumenDiot.pdf'),'wb') as f:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, f)
 
-        
-            
+
+
     def hazListadeUuids(self):
         self.listadeUuids = []
         for renglon in range(self.numeroDeFacturasValidas):
             self.listadeUuids.append(self.tableWidget_xml.item(renglon,1).text())
-            
-     
+
+
     def handleHeaderMenu(self, pos):
         menu = QtGui.QMenu()
         deleteAction = QtGui.QAction('&Delete', self)
         #deleteAction = QtGui.QAction("Delete")
         deleteAction.triggered.connect(lambda: self.quitaRenglon(self.tableWidget_xml.verticalHeader().logicalIndexAt(pos)))
         menu.addAction(deleteAction)
-        
+
         menu.exec_(QtGui.QCursor.pos())
-        
+
     def quitaRenglon(self,row):
         elNombre = self.tableWidget_xml.item(row,2).text()
         suRFC = ""
@@ -239,59 +244,59 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             if factura.UUID == elNombre:
                 print("i found it!")
                 suRFC = factura.EmisorRFC
-                
+
                 break
-        
-        
+
+
         suSubtotal = float(self.tableWidget_xml.item(row,7).text())
         suDescuento = float(self.tableWidget_xml.item(row,8).text())
         suTrasladoIVA = float(self.tableWidget_xml.item(row,9).text())
         suImporte = float(self.tableWidget_xml.item(row,7).text())-float(self.tableWidget_xml.item(row,8).text())
-        self.tableWidget_xml.removeRow(row) 
+        self.tableWidget_xml.removeRow(row)
 
         if suRFC in self.diccionarioPorRFCs:
             self.diccionarioPorRFCs[suRFC]['subTotal'] -= suSubtotal
             self.diccionarioPorRFCs[suRFC]['descuento'] -= suDescuento
             self.diccionarioPorRFCs[suRFC]['trasladoIVA'] -= suTrasladoIVA
             self.diccionarioPorRFCs[suRFC]['importe'] -= suImporte
-            
-            if math.fabs(self.diccionarioPorRFCs[suRFC]['subTotal']) < 0.0001 and math.fabs(self.diccionarioPorRFCs[suRFC]['descuento']) < 0.0001 and math.fabs(self.diccionarioPorRFCs[suRFC]['trasladoIVA']) < 0.0001 and math.fabs(self.diccionarioPorRFCs[suRFC]['importe']) < 0.0001:  
+
+            if math.fabs(self.diccionarioPorRFCs[suRFC]['subTotal']) < 0.0001 and math.fabs(self.diccionarioPorRFCs[suRFC]['descuento']) < 0.0001 and math.fabs(self.diccionarioPorRFCs[suRFC]['trasladoIVA']) < 0.0001 and math.fabs(self.diccionarioPorRFCs[suRFC]['importe']) < 0.0001:
                 self.diccionarioPorRFCs.pop(suRFC,0)
-        
-        
-        self.numeroDeFacturasValidas -= 1 
+
+
+        self.numeroDeFacturasValidas -= 1
         self.sumale(1)
         self.hazResumenDiot(self.esteFolder)
-        try: 
+        try:
             if os.path.exists(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf")):
-                
+
                 os.remove(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
-                
-            os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf")) 
+
+            os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
         except:
             QtGui.QMessageBox.information(self, "Information", "tienes abierto el resumenDiot.pdf")
-            
-          
+
+
     def sumale(self, renglonResumen=0):
         for columna in range(7,14):
             suma = 0
             for renglon in range(self.numeroDeFacturasValidas):
-                        
+
                 suma += float(self.tableWidget_xml.item(renglon, columna).text())
-                
- 
-            self.tableWidget_resumen.setItem(renglonResumen,columna-4,QTableWidgetItem(str(suma))) 
-        
+
+
+            self.tableWidget_resumen.setItem(renglonResumen,columna-4,QTableWidgetItem(str(suma)))
+
         if renglonResumen == 1:
-            self.tableWidget_resumen.setItem(0,1,QTableWidgetItem("            ---------"))    
-            self.tableWidget_resumen.setItem(0,2,QTableWidgetItem("Sumatoria del Periodo Original"))      
-            self.tableWidget_resumen.setItem(1,1,QTableWidgetItem("Resumen Diot Actualizado"))    
-            self.tableWidget_resumen.setItem(1,2,QTableWidgetItem("Sumatoria del Periodo Actualizada"))  
+            self.tableWidget_resumen.setItem(0,1,QTableWidgetItem("            ---------"))
+            self.tableWidget_resumen.setItem(0,2,QTableWidgetItem("Sumatoria del Periodo Original"))
+            self.tableWidget_resumen.setItem(1,1,QTableWidgetItem("Resumen Diot Actualizado"))
+            self.tableWidget_resumen.setItem(1,2,QTableWidgetItem("Sumatoria del Periodo Actualizada"))
             self.tableWidget_resumen.setCellWidget(1,0,ImgWidget1(self))
             self.tableWidget_resumen.setCellWidget(0,0,ImgWidget2(self))
-            
-            
-    def ponEncabezado(self):   
+
+
+    def ponEncabezado(self):
         itemVersion = QTableWidgetItem("V")
         itemVersion.setToolTip("Versión")
         self.tableWidget_xml.setHorizontalHeaderItem (0, QTableWidgetItem("Pdf"))
@@ -310,9 +315,9 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.tableWidget_xml.setHorizontalHeaderItem (13, QTableWidgetItem("Total"))
         self.tableWidget_xml.setHorizontalHeaderItem (14, QTableWidgetItem("Forma\nPago"))
         self.tableWidget_xml.setHorizontalHeaderItem (15, QTableWidgetItem("Método\nPago"))
- 
-    
-    
+
+
+
     def meDoblePicaronXML(self, row,column):
         print("me picaron en : " +str(row)+", " +str(column))
 #         if column == 5:
@@ -322,16 +327,16 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 #                 if factura.UUID == suUUID:
 #                     print("i found it!")
 #                     laFactura = factura
-#                     
+#
 #                     break
-#             mesage = ""    
+#             mesage = ""
 #             for concepto in laFactura.conceptos:
 #                 mesage += concepto["descripcion"] + u'\n'
-#                 
+#
 #             QtGui.QMessageBox.information(self, "Conceptos", mesage)
         if column == 2:
-             
-              
+
+
             xml =join(self.esteFolder + os.sep,self.tableWidget_xml.item(row, 2).text()+".xml")
             #acrobatPath = r'C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe'
             #subprocess.Popen("%s %s" % (acrobatPath, pdf))
@@ -340,10 +345,10 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 print("este guey me pico:"+xml)
             except:
                 print ("el sistema no tiene una aplicacion por default para abrir xmls")
-                QtGui.QMessageBox.information(self, "Information", "El sistema no tiene una aplicación por default para abrir xmls" )  
-                 
+                QtGui.QMessageBox.information(self, "Information", "El sistema no tiene una aplicación por default para abrir xmls" )
+
         if column == 0:
-             
+
             pdf = join(join(self.esteFolder,"pdfs"),self.tableWidget_xml.item(row, 2).text()+".pdf")
             #acrobatPath = r'C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe'
             #subprocess.Popen("%s %s" % (acrobatPath, pdf))
@@ -352,11 +357,11 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 print("este guey me pico:"+pdf)
             except:
                 print ("el sistema no tiene una aplicacion por default para abrir pdfs")
-                QtGui.QMessageBox.information(self, "Information", "El sistema no tiene una aplicación por default para abrir pdfs" ) 
-    
-    
+                QtGui.QMessageBox.information(self, "Information", "El sistema no tiene una aplicación por default para abrir pdfs" )
+
+
     def meDoblePicaronResumen(self, row,column):
-        print("me picaron en : " +str(row)+", " +str(column))  
+        print("me picaron en : " +str(row)+", " +str(column))
         pdf = join(join(self.esteFolder,"pdfs"),"resumenDiot.pdf")
         #acrobatPath = r'C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe'
         #subprocess.Popen("%s %s" % (acrobatPath, pdf))
@@ -365,8 +370,8 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             print("este guey me pico:"+pdf)
         except:
             print ("el sistema no tiene una aplicacion por default para abrir pdfs")
-            QtGui.QMessageBox.information(self, "Information", "El sistema no tiene una aplicación por default para abrir pdfs" ) 
-        
+            QtGui.QMessageBox.information(self, "Information", "El sistema no tiene una aplicación por default para abrir pdfs" )
+
     def cambiaSeleccionDeImpresora(self, curr, prev):
         print(curr.text())
         self.impresoraDefault = curr.text()
@@ -377,14 +382,14 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.listaDeImpresoras.setEnabled(True)
 
         for (a,b,name,d) in win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL):
-            self.listaDeImpresoras.addItem(name)  
-            
-            
-             
-        
+            self.listaDeImpresoras.addItem(name)
+
+
+
+
     def imprime(self):
         #objetosMagicosOrdenados = sorted(self.objetosMagicos, key=lambda objetosMagicos: objetosMagicos.fecha)
-        
+
         for factura in self.listaDeFacturasOrdenadas:
             try:
                 if factura.total > 0:
@@ -393,34 +398,37 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                     if hh > 40:
                         print("algo")
                         time_old.sleep(10)
-                
+
                 elif factura.total < 0:
                     print("negativo?????")
                 else:#si es cero
                     print("nada")
             except:
-                print("hay un pdf faltante o corrupto")    
-            
-            
+                print("hay un pdf faltante o corrupto")
+
+
         hh = win32api.ShellExecute(0, "print", join(join(self.esteFolder,"pdfs"), "resumenDiot.pdf") , None,  ".",  0)
     def esteItem(self, text, tooltip):
         item = QTableWidgetItem(text)
-        item.setToolTip(tooltip)  
-        item.setFlags(item.flags() ^ Qt.ItemIsEditable)  
+        item.setToolTip(tooltip)
+        item.setFlags(item.flags() ^ Qt.ItemIsEditable)
         return item
 
 
     def cualCarpeta(self):
+
         self.folder.hide()
         esteFileChooser = QFileDialog()
         esteFileChooser.setFileMode(QFileDialog.Directory)
         if esteFileChooser.exec_():
-            
+
             self.esteFolder = esteFileChooser.selectedFiles()[0] + "/"
+            self.hash_carpeta = hashlib.sha224(self.esteFolder + str(datetime.now())).hexdigest()
+
             if not os.path.exists(join(self.esteFolder, "pdfs")):
                 os.makedirs(join(self.esteFolder, "pdfs"))
-            self.tableWidget_xml.clear() 
-            self.tableWidget_resumen.clear() 
+            self.tableWidget_xml.clear()
+            self.tableWidget_resumen.clear()
             self.tableWidget_resumen.repaint()
             self.ponEncabezado()
             self.tableWidget_xml.setRowCount(13)
@@ -432,7 +440,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             contador = 0
             for archivo in os.listdir(self.esteFolder):
                 if ".xml" in archivo:
-                     
+
                     laFactura = Factura(join(self.esteFolder + os.sep,archivo))
                     if laFactura.version:
                         if laFactura.UUID in self.listaDeUUIDs:
@@ -443,65 +451,65 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                             self.listaDeUUIDs.append(laFactura.UUID)
                             contador += 1
                             self.listaDeFacturas.append(laFactura)
-            
-            if contador > 13:        
-                self.tableWidget_xml.setRowCount(contador)     
-             
+
+            if contador > 13:
+                self.tableWidget_xml.setRowCount(contador)
+
             self.listaDeFacturasOrdenadas = sorted(self.listaDeFacturas, key=lambda listaDeFacturas: listaDeFacturas.fechaTimbrado)
             self.diccionarioPorRFCs = {}
             print(self.listaDeFacturasOrdenadas)
-            
-     
+
+
             pd =  QProgressDialog("Operation in progress.", "Cancel", 0, 100, self)
             pd.setWindowTitle("Huiini")
             pd.setValue(0)
             pd.show()
-     
+
             if cuantosDuplicados > 0:
                 mensaje = "hay "+str(cuantosDuplicados)+" duplicados\n"
                 chunks = []
                 for esteDuplicado in self.listaDeDuplicados:
-                    chunks.append(str(esteDuplicado)+"\n")   
+                    chunks.append(str(esteDuplicado)+"\n")
                 mensaje2 = "".join(chunks)
                 mensaje = mensaje + mensaje2
                 QtGui.QMessageBox.information(self, "Information", mensaje)
-     
+
             contador = 0
             for factura in self.listaDeFacturasOrdenadas:
                 pd.setValue(50*((contador + 1)/len(self.listaDeFacturasOrdenadas)))
                 factura.setFolio(contador + 1)
                 pd.setLabelText("Procesando: " + factura.UUID[:17] + "...")
-                
+
                 #url = "http://huiini.pythonanywhere.com/upload"
-                url = "http://192.168.15.29:8000/upload"
-                
+                url =  "%s/upload/%s/" % (url_server, self.hash_carpeta)
+
                 ####################################################Definir puerto  80 80   ################################
                 xml_path = factura.xml_path
-                
+
                 #xml_path = 'C:/Users/SICAD/Dropbox/Araceli/2017/JUNIO/EGRESOS/DE820CD4-2F37-4751-9D38-0FD6947CB287.xml'
                 files = {'files': open(xml_path , 'rb')}
-                r = requests.post (url, files=files, auth=('cliente1', 'holahola'))
+                r = requests.post (url, files=files,  auth=(self.w.username.text(), self.w.password.text()))
                 # print(r.content)
                 # print(r.text)
                 xml_name = basename(factura.xml_path)
-                
-                url_get = "http://192.168.15.29:8000/download"
+
+                url_get = "%s/download/%s/" % (url_server, self.hash_carpeta)
                 #url_get = "http://huiini.pythonanywhere.com/download"
                 ###################################################Definir puerto 80 80, ip publica,  ################################
-                
-                
-                        
-                r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name, 'folio': contador + 1}, stream=True, auth=('cliente1', 'holahola'))
+
+
+
+                r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name, 'folio': contador + 1}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
                 if r.status_code == 200:
                     with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
                         r.raw.decode_content = True
                         shutil.copyfileobj(r.raw, f)
-                           
+
                 self.tableWidget_xml.setItem(contador,1,self.esteItem(factura.fechaTimbrado,factura.fechaTimbrado))
                 self.tableWidget_xml.setItem(contador,2,self.esteItem(factura.UUID,factura.UUID))
                 self.tableWidget_xml.setItem(contador,3,self.esteItem(factura.ReceptorRFC,factura.ReceptorNombre))
                 self.tableWidget_xml.setItem(contador,4,self.esteItem(factura.EmisorRFC,factura.EmisorNombre))
-                mesage = ""    
+                mesage = ""
                 for concepto in factura.conceptos:
                     mesage += concepto["descripcion"] + u'\n'
                 self.tableWidget_xml.setItem(contador,5, self.esteItem(factura.conceptos[0]['descripcion'],mesage))
@@ -515,7 +523,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 self.tableWidget_xml.setItem(contador,13,self.esteItem(str(factura.total),""))
                 self.tableWidget_xml.setItem(contador,14,self.esteItem(str(factura.formaDePago),""))
                 self.tableWidget_xml.setItem(contador,15, self.esteItem(str(factura.metodoDePago),factura.metodoDePagoStr))
-                 
+
                 if factura.EmisorRFC in self.diccionarioPorRFCs:
                     self.diccionarioPorRFCs[factura.EmisorRFC]['subTotal'] += float(factura.subTotal)
                     self.diccionarioPorRFCs[factura.EmisorRFC]['descuento'] += float(factura.descuento)
@@ -524,89 +532,89 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                     self.diccionarioPorRFCs[factura.EmisorRFC]['total'] += float(factura.total)
                     print("sumale " + str(factura.subTotal) )
                 else:
-                    self.diccionarioPorRFCs[factura.EmisorRFC] = {'subTotal': float(factura.subTotal), 
-                                                                  'descuento': float(factura.descuento), 
+                    self.diccionarioPorRFCs[factura.EmisorRFC] = {'subTotal': float(factura.subTotal),
+                                                                  'descuento': float(factura.descuento),
                                                                   'trasladoIVA': float(factura.traslados['IVA']['importe']),
                                                                   'importe': float(factura.subTotal)-float(factura.descuento),
                                                                   'total': float(factura.total)
                                                                 }
-                    print("crealo con " + str(factura.subTotal))    
+                    print("crealo con " + str(factura.subTotal))
                 contador +=1
-                 
+
             #if contador == len(self.listaDeFacturasOrdenadas):
-            pd.setLabelText("Creando Resumen...")   
+            pd.setLabelText("Creando Resumen...")
             for t in range(0,5):
                 time_old.sleep(0.2*len(self.listaDeFacturasOrdenadas))
                 pd.setValue(pd.value() + ( (100 - pd.value()) / 2))
-             
+
             contador = -1
             for factura in self.listaDeFacturasOrdenadas:
                 try:
                     contador += 1
                     if os.path.isfile(join(self.esteFolder,factura.UUID+".pdf")):
-                         
+
                         self.tableWidget_xml.setCellWidget(contador,0, ImgWidget1(self))
                     else:
                         self.tableWidget_xml.setCellWidget(contador,0, ImgWidget2(self))
-                         
+
                 except:
                     print("no pude un xml")
-                 
-            self.imprimir.setEnabled(True)    
-      
+
+            self.imprimir.setEnabled(True)
+
             self.numeroDeFacturasValidas = len(self.listaDeFacturasOrdenadas)
-             
-             
-            self.sumale() 
-            pd.setLabelText("Carpeta procesada")   
+
+
+            self.sumale()
+            pd.setLabelText("Carpeta procesada")
             pd.setValue(pd.value() + ( (100 - pd.value()) / 2))
-            self.hazResumenDiot(self.esteFolder) 
+            self.hazResumenDiot(self.esteFolder)
             pd.setValue(100)
             self.tableWidget_resumen.setItem(0,1,QTableWidgetItem("Resumen Diot"))
             self.tableWidget_resumen.setItem(0,2,QTableWidgetItem("Sumatoria del Periodo"))
             self.tableWidget_resumen.setCellWidget(0,0, ImgWidget1(self))
-            
+
             for factura in self.listaDeFacturasOrdenadas:
                 esteFile = factura.UUID + ".pdf"
-                try: 
+                try:
                     if os.path.exists(os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile)):
                         os.remove(os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile))
-                    os.rename(os.path.join(self.esteFolder,esteFile), os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile)) 
+                    os.rename(os.path.join(self.esteFolder,esteFile), os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile))
                 except:
                     QtGui.QMessageBox.information(self, "Information", "No fue posible mover " + esteFile)
-                
-            try: 
+
+            try:
                 if os.path.exists(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf")):
                     os.remove(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
-                os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf")) 
+                os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
             except:
                 QtGui.QMessageBox.information(self, "Information", "No fue posible mover resumenDiot.pdf")
-             
+
             for esteFile in listdir(self.esteFolder):
-                if esteFile.endswith(".tex") or esteFile.endswith(".aux") or esteFile.endswith(".log"): 
+                if esteFile.endswith(".tex") or esteFile.endswith(".aux") or esteFile.endswith(".log"):
                     print("aqui borraria")
-                    try: 
-                        os.remove(join(self.esteFolder,esteFile))       
+                    try:
+                        os.remove(join(self.esteFolder,esteFile))
                     except:
                         QtGui.QMessageBox.information(self, "Information", "No fue posible borrar " + join(self.esteFolder,esteFile))
-            
+
             #obtener los warnings de las facturas
             mensajeAlerta =""
             for factura in self.listaDeFacturasOrdenadas:
                 if not factura.mensaje == "":
                     mensajeAlerta += factura.UUID + factura.mensaje + r'\n'
-            if not mensajeAlerta == "":        
+            if not mensajeAlerta == "":
                 QtGui.QMessageBox.information(self, "Information", mensajeAlerta)
-            #time_old.sleep(1)       
-                
+            #time_old.sleep(1)
+
             pd.hide()
-            
-            
+
+
         self.folder.setText("Carpeta Procesada: " + u'\n' + self.esteFolder)
         self.folder.show()
         self.raise_()
-        self.activateWindow()    
-        
+        self.activateWindow()
+
 app = QApplication(sys.argv)
 form = Ui_MainWindow()
 form.show()

@@ -3,7 +3,7 @@ from distutils.core import setup
 import py2exe, sys
 
 sys.argv.append('py2exe')
-
+#C:\Python34\python.exe setup.py
 setup(
     windows=[
             {
@@ -11,7 +11,7 @@ setup(
                 "icon_resources": [(1, "myicon.ico")]
             }
         ],
-    
+
 
     options={
                "py2exe":{
@@ -20,5 +20,5 @@ setup(
                        "includes":["PySide.QtCore","PySide.QtGui", "urllib3", "requests", "queue"]
                }
        },
-       
-) 
+
+)
