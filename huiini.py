@@ -31,7 +31,7 @@ import hashlib
 #         # Implement my authentication
 #         return r
 
-url_server = "http://192.168.15.13:8008"
+url_server = "http://192.168.15.28:8008"
 #url_server = "http://huiini.pythonanywhere.com"
 class ImgWidget1(QtGui.QLabel):
 
@@ -413,7 +413,28 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         item.setToolTip(tooltip)
         item.setFlags(item.flags() ^ Qt.ItemIsEditable)
         return item
+	
+	
+    def pidePDFs(self):
+		
+        for factura in self.listaDeFacturasOrdenadas:
+            if factura.has_pdf == False:
+				xml_name = basename(factura.xml_path)
 
+				url_get = "%s/download/%s/" % (url_server, self.hash_carpeta)
+				#url_get = "http://huiini.pythonanywhere.com/download"
+				###################################################Definir puerto 80 80, ip publica,  ################################
+
+
+
+				r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
+				if r.status_code == 200:
+					with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
+						r.raw.decode_content = True
+						shutil.copyfileobj(r.raw, f)
+						factura.has_pdf = True
+	
+	
 
     def cualCarpeta(self):
 
@@ -488,22 +509,10 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
                 #xml_path = 'C:/Users/SICAD/Dropbox/Araceli/2017/JUNIO/EGRESOS/DE820CD4-2F37-4751-9D38-0FD6947CB287.xml'
                 files = {'files': open(xml_path , 'rb')}
-                r = requests.post (url, files=files,  auth=(self.w.username.text(), self.w.password.text()))
+                r = requests.post (url, files=files, data = {'folio' :contador + 1},  auth=(self.w.username.text(), self.w.password.text()))
                 # print(r.content)
                 # print(r.text)
-                xml_name = basename(factura.xml_path)
 
-                url_get = "%s/download/%s/" % (url_server, self.hash_carpeta)
-                #url_get = "http://huiini.pythonanywhere.com/download"
-                ###################################################Definir puerto 80 80, ip publica,  ################################
-
-
-
-                r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name, 'folio': contador + 1}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
-                if r.status_code == 200:
-                    with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
-                        r.raw.decode_content = True
-                        shutil.copyfileobj(r.raw, f)
 
                 self.tableWidget_xml.setItem(contador,1,self.esteItem(factura.fechaTimbrado,factura.fechaTimbrado))
                 self.tableWidget_xml.setItem(contador,2,self.esteItem(factura.UUID,factura.UUID))
@@ -547,7 +556,18 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 time_old.sleep(0.2*len(self.listaDeFacturasOrdenadas))
                 pd.setValue(pd.value() + ( (100 - pd.value()) / 2))
 
+            
+			
+			
+            self.pidePDFs()
+			
+			
+			
             contador = -1
+			
+			
+			
+			
             for factura in self.listaDeFacturasOrdenadas:
                 try:
                     contador += 1

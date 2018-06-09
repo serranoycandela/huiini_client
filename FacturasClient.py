@@ -15,7 +15,7 @@ class FacturaClient(object):
         self.pdflatex_path = "pdflatex"
         print(self.pdflatex_path)
         self.xml_path = xml_path
-
+        self.has_pdf = False
         xml_dir = os.path.dirname(self.xml_path)
         self.xml_name = os.path.basename(self.xml_path)
 
