@@ -31,8 +31,8 @@ import hashlib
 #         # Implement my authentication
 #         return r
 
-url_server = "http://192.168.15.28:8008"
-#url_server = "http://huiini.pythonanywhere.com"
+#url_server = "http://192.168.15.28:8008"
+url_server = "http://huiini.pythonanywhere.com"
 class ImgWidget1(QtGui.QLabel):
 
     def __init__(self, parent=None):
@@ -419,20 +419,20 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 		
         for factura in self.listaDeFacturasOrdenadas:
             if factura.has_pdf == False:
-				xml_name = basename(factura.xml_path)
+                xml_name = basename(factura.xml_path)
 
-				url_get = "%s/download/%s/" % (url_server, self.hash_carpeta)
+                url_get = "%s/download/%s/" % (url_server, self.hash_carpeta)
 				#url_get = "http://huiini.pythonanywhere.com/download"
 				###################################################Definir puerto 80 80, ip publica,  ################################
 
 
 
-				r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
-				if r.status_code == 200:
-					with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
-						r.raw.decode_content = True
-						shutil.copyfileobj(r.raw, f)
-						factura.has_pdf = True
+                r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
+                if r.status_code == 200:
+                    with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
+                        r.raw.decode_content = True
+                        shutil.copyfileobj(r.raw, f)
+                        factura.has_pdf = True
 	
 	
 
@@ -530,8 +530,8 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 self.tableWidget_xml.setItem(contador,11,self.esteItem(str(factura.retenciones["IVA"]),""))
                 self.tableWidget_xml.setItem(contador,12,self.esteItem(str(factura.retenciones["ISR"]),""))
                 self.tableWidget_xml.setItem(contador,13,self.esteItem(str(factura.total),""))
-                self.tableWidget_xml.setItem(contador,14,self.esteItem(str(factura.formaDePago),""))
-                self.tableWidget_xml.setItem(contador,15, self.esteItem(str(factura.metodoDePago),factura.metodoDePagoStr))
+                self.tableWidget_xml.setItem(contador,14,self.esteItem(factura.formaDePago,""))
+                self.tableWidget_xml.setItem(contador,15, self.esteItem(factura.metodoDePago,factura.metodoDePagoStr))
 
                 if factura.EmisorRFC in self.diccionarioPorRFCs:
                     self.diccionarioPorRFCs[factura.EmisorRFC]['subTotal'] += float(factura.subTotal)

@@ -185,7 +185,9 @@ class FacturaClient(object):
             strBien = strBien.replace(u"┬Ö", " ")
             strBien = strBien.replace(u'\x99', " ")
             strBien = strBien.replace(u'\x7f', u"Ñ")
-            #strBien = strBien.replace(u'\xf3', u"Ñ")
+            strBien = strBien.replace(u'\xf3', u"ó")
+            strBien = strBien.replace(u'\xd1', u"Ñ")
+			
 
 
 
