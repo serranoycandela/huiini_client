@@ -436,7 +436,9 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         if esteFileChooser.exec_():
 
             self.esteFolder = esteFileChooser.selectedFiles()[0] + "/"
-            self.hash_carpeta = hashlib.sha224(self.esteFolder + str(datetime.now())).hexdigest()
+            pre_hash = self.esteFolder + str(datetime.now())
+            pal_hash = pre_hash.encode('utf-8')
+            self.hash_carpeta = hashlib.sha224(pal_hash).hexdigest()
 
             if not os.path.exists(join(self.esteFolder, "huiini")):
                 os.makedirs(join(self.esteFolder, "huiini"))
