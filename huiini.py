@@ -14,7 +14,6 @@ import win32print
 import win32api
 import time as time_old
 from subprocess import Popen
-import jinja2
 from FacturasClient import FacturaClient as Factura
 import math
 import json
@@ -31,7 +30,7 @@ import hashlib
 #         # Implement my authentication
 #         return r
 
-#url_server = "http://192.168.15.28:8008"
+#url_server = "http://192.168.15.19:8008"
 url_server = "http://huiini.pythonanywhere.com"
 class ImgWidget1(QtGui.QLabel):
 
@@ -154,13 +153,6 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.w.setGeometry(QRect(100, 100, 400, 200))
         self.w.show()
 
-    def getTemplate(self,tpl_path):
-            path, filename = os.path.split(tpl_path)
-            return jinja2.Environment(
-                loader=jinja2.FileSystemLoader(path or './')
-            ).get_template(filename)
-
-
     def hazResumenDiot(self,currentDir):
         sumaSubTotal = 0
         sumaDescuento = 0
@@ -216,7 +208,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         r = requests.get(url_get, params={'lista_diot': json.dumps(self.listaDiot)}, stream=True, auth=(self.w.username.text(), self.w.password.text()))
         time_old.sleep(1)
         if r.status_code == 200:
-            with open(join(self.esteFolder, 'resumenDiot.pdf'),'wb') as f:
+            with open(join(join(self.esteFolder,"huiini"), 'resumenDiot.pdf'),'wb') as f:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, f)
 
@@ -268,11 +260,11 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.sumale(1)
         self.hazResumenDiot(self.esteFolder)
         try:
-            if os.path.exists(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf")):
+            if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf")):
 
-                os.remove(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
+                os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
 
-            os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
+            os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
         except:
             QtGui.QMessageBox.information(self, "Information", "tienes abierto el resumenDiot.pdf")
 
@@ -349,7 +341,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
         if column == 0:
 
-            pdf = join(join(self.esteFolder,"pdfs"),self.tableWidget_xml.item(row, 2).text()+".pdf")
+            pdf = join(join(self.esteFolder,"huiini"),self.tableWidget_xml.item(row, 2).text()+".pdf")
             #acrobatPath = r'C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe'
             #subprocess.Popen("%s %s" % (acrobatPath, pdf))
             try:
@@ -362,7 +354,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
     def meDoblePicaronResumen(self, row,column):
         print("me picaron en : " +str(row)+", " +str(column))
-        pdf = join(join(self.esteFolder,"pdfs"),"resumenDiot.pdf")
+        pdf = join(join(self.esteFolder,"huiini"),"resumenDiot.pdf")
         #acrobatPath = r'C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe'
         #subprocess.Popen("%s %s" % (acrobatPath, pdf))
         try:
@@ -394,7 +386,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             try:
                 if factura.total > 0:
                     print(factura.fechaTimbrado)
-                    hh = win32api.ShellExecute(0, "print", join(join(self.esteFolder,"pdfs"), factura.UUID+".pdf"),None, ".",  0)
+                    hh = win32api.ShellExecute(0, "print", join(join(self.esteFolder,"huiini"), factura.UUID+".pdf"),None, ".",  0)
                     if hh > 40:
                         print("algo")
                         time_old.sleep(10)
@@ -407,16 +399,16 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 print("hay un pdf faltante o corrupto")
 
 
-        hh = win32api.ShellExecute(0, "print", join(join(self.esteFolder,"pdfs"), "resumenDiot.pdf") , None,  ".",  0)
+        hh = win32api.ShellExecute(0, "print", join(join(self.esteFolder,"huiini"), "resumenDiot.pdf") , None,  ".",  0)
     def esteItem(self, text, tooltip):
         item = QTableWidgetItem(text)
         item.setToolTip(tooltip)
         item.setFlags(item.flags() ^ Qt.ItemIsEditable)
         return item
-	
-	
+
+
     def pidePDFs(self):
-		
+
         for factura in self.listaDeFacturasOrdenadas:
             if factura.has_pdf == False:
                 xml_name = basename(factura.xml_path)
@@ -429,12 +421,12 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
                 r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
                 if r.status_code == 200:
-                    with open(join(self.esteFolder, factura.UUID+'.pdf'),'wb') as f:
+                    with open(join(join(self.esteFolder,"huiini"), factura.UUID+'.pdf'),'wb') as f:
                         r.raw.decode_content = True
                         shutil.copyfileobj(r.raw, f)
                         factura.has_pdf = True
-	
-	
+
+
 
     def cualCarpeta(self):
 
@@ -446,8 +438,8 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             self.esteFolder = esteFileChooser.selectedFiles()[0] + "/"
             self.hash_carpeta = hashlib.sha224(self.esteFolder + str(datetime.now())).hexdigest()
 
-            if not os.path.exists(join(self.esteFolder, "pdfs")):
-                os.makedirs(join(self.esteFolder, "pdfs"))
+            if not os.path.exists(join(self.esteFolder, "huiini")):
+                os.makedirs(join(self.esteFolder, "huiini"))
             self.tableWidget_xml.clear()
             self.tableWidget_resumen.clear()
             self.tableWidget_resumen.repaint()
@@ -556,18 +548,18 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                 time_old.sleep(0.2*len(self.listaDeFacturasOrdenadas))
                 pd.setValue(pd.value() + ( (100 - pd.value()) / 2))
 
-            
-			
-			
+
+
+
             self.pidePDFs()
-			
-			
-			
+
+
+
             contador = -1
-			
-			
-			
-			
+
+
+
+
             for factura in self.listaDeFacturasOrdenadas:
                 try:
                     contador += 1
@@ -594,21 +586,21 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             self.tableWidget_resumen.setItem(0,2,QTableWidgetItem("Sumatoria del Periodo"))
             self.tableWidget_resumen.setCellWidget(0,0, ImgWidget1(self))
 
-            for factura in self.listaDeFacturasOrdenadas:
-                esteFile = factura.UUID + ".pdf"
-                try:
-                    if os.path.exists(os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile)):
-                        os.remove(os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile))
-                    os.rename(os.path.join(self.esteFolder,esteFile), os.path.join(os.path.join(self.esteFolder,"pdfs"),esteFile))
-                except:
-                    QtGui.QMessageBox.information(self, "Information", "No fue posible mover " + esteFile)
-
-            try:
-                if os.path.exists(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf")):
-                    os.remove(os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
-                os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"pdfs"),"resumenDiot.pdf"))
-            except:
-                QtGui.QMessageBox.information(self, "Information", "No fue posible mover resumenDiot.pdf")
+            # for factura in self.listaDeFacturasOrdenadas:
+            #     esteFile = factura.UUID + ".pdf"
+            #     try:
+            #         if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),esteFile)):
+            #             os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),esteFile))
+            #         #os.rename(os.path.join(self.esteFolder,esteFile), os.path.join(os.path.join(self.esteFolder,"huiini"),esteFile))
+            #     except:
+            #         QtGui.QMessageBox.information(self, "Information", "No fue posible mover " + esteFile)
+            #
+            # try:
+            #     if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf")):
+            #         os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
+            #     os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
+            # except:
+            #     QtGui.QMessageBox.information(self, "Information", "No fue posible mover resumenDiot.pdf")
 
             for esteFile in listdir(self.esteFolder):
                 if esteFile.endswith(".tex") or esteFile.endswith(".aux") or esteFile.endswith(".log"):
