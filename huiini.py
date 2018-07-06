@@ -32,19 +32,29 @@ import hashlib
 
 #url_server = "http://192.168.15.19:8008"
 url_server = "http://huiini.pythonanywhere.com"
-class ImgWidget1(QtGui.QLabel):
+
+
+try:
+    scriptDirectory = os.path.dirname(os.path.abspath(__file__))
+except NameError:  # We are the main py2exe script, not a module
+    scriptDirectory = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+
+
+
+class ImgWidgetPalomita(QtGui.QLabel):
 
     def __init__(self, parent=None):
-        super(ImgWidget1, self).__init__(parent)
-        pic = QtGui.QPixmap("palomita.png")
-        self.setPixmap(pic)
+        super(ImgWidgetPalomita, self).__init__(parent)
+        pic_palomita = QtGui.QPixmap(join(scriptDirectory,"palomita.png"))
+        self.setPixmap(pic_palomita)
 
-class ImgWidget2(QtGui.QLabel):
+class ImgWidgetTache(QtGui.QLabel):
 
     def __init__(self, parent=None):
-        super(ImgWidget2, self).__init__(parent)
-        pic = QtGui.QPixmap("x.png")
-        self.setPixmap(pic)
+        super(ImgWidgetTache, self).__init__(parent)
+        pic_tache = QtGui.QPixmap(join(scriptDirectory,"x.png"))
+        self.setPixmap(pic_tache)
 
 class MyPopup(QWidget):
     def __init__(self):
@@ -75,7 +85,7 @@ class MyPopup(QWidget):
         ''' This is called when the button is clicked. '''
         print(self.username.text(), self.password.text())
         url =  "%s/cuenta" % url_server
-        r = requests.post (url, auth=(self.username.text(), self.password.text()))
+        r = requests.post (url, timeout=20, auth=(self.username.text(), self.password.text()))
         if str(r.status_code).startswith("3") or str(r.status_code).startswith("2"):
             self.hide()
         else:
@@ -93,7 +103,8 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         super(Ui_MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        logoPix = QtGui.QPixmap("logo.png")
+        print(scriptDirectory)
+        logoPix = QtGui.QPixmap(join(scriptDirectory,"logo.png"))
         self.labelLogo.setPixmap(logoPix)
         self.pdflatex_path = "C:/Program Files/MiKTeX 2.9/miktex/bin/x64/pdflatex.exe"
 
@@ -284,8 +295,8 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             self.tableWidget_resumen.setItem(0,2,QTableWidgetItem("Sumatoria del Periodo Original"))
             self.tableWidget_resumen.setItem(1,1,QTableWidgetItem("Resumen Diot Actualizado"))
             self.tableWidget_resumen.setItem(1,2,QTableWidgetItem("Sumatoria del Periodo Actualizada"))
-            self.tableWidget_resumen.setCellWidget(1,0,ImgWidget1(self))
-            self.tableWidget_resumen.setCellWidget(0,0,ImgWidget2(self))
+            self.tableWidget_resumen.setCellWidget(1,0,ImgWidgetPalomita(self))
+            self.tableWidget_resumen.setCellWidget(0,0,ImgWidgetTache(self))
 
 
     def ponEncabezado(self):
@@ -408,8 +419,9 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
 
     def pidePDFs(self):
-
+        contador = -1
         for factura in self.listaDeFacturasOrdenadas:
+            contador += 1
             if factura.has_pdf == False:
                 xml_name = basename(factura.xml_path)
 
@@ -418,14 +430,18 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 				###################################################Definir puerto 80 80, ip publica,  ################################
 
 
-
-                r = requests.get(url_get, params={'uuid': factura.UUID, 'xml_name': xml_name}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
-                if r.status_code == 200:
-                    with open(join(join(self.esteFolder,"huiini"), factura.UUID+'.pdf'),'wb') as f:
-                        r.raw.decode_content = True
-                        shutil.copyfileobj(r.raw, f)
-                        factura.has_pdf = True
-
+                try:
+                    r = requests.get(url_get, timeout=10, params={'uuid': factura.UUID, 'xml_name': xml_name}, stream=True,  auth=(self.w.username.text(), self.w.password.text()))
+                    if r.status_code == 200:
+                        with open(join(join(self.esteFolder,"huiini"), factura.UUID+'.pdf'),'wb') as f:
+                            r.raw.decode_content = True
+                            shutil.copyfileobj(r.raw, f)
+                            factura.has_pdf = True
+                            self.tableWidget_xml.setCellWidget(contador,0, ImgWidgetPalomita(self))
+                    else:
+                        self.tableWidget_xml.setCellWidget(contador,0, ImgWidgetTache(self))
+                except:
+                    self.tableWidget_xml.setCellWidget(contador,0, ImgWidgetTache(self))
 
 
     def cualCarpeta(self):
@@ -503,8 +519,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
                 #xml_path = 'C:/Users/SICAD/Dropbox/Araceli/2017/JUNIO/EGRESOS/DE820CD4-2F37-4751-9D38-0FD6947CB287.xml'
                 files = {'files': open(xml_path , 'rb')}
-                r = requests.post (url, files=files, data = {'folio' :contador + 1},  auth=(self.w.username.text(), self.w.password.text()))
-                # print(r.content)
+                # print(r.content
                 # print(r.text)
 
 
@@ -542,12 +557,22 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                                                                   'total': float(factura.total)
                                                                 }
                     print("crealo con " + str(factura.subTotal))
+
                 contador +=1
+
+                try:
+                    r = requests.post (url, files=files,
+                                       timeout=20,
+                                       data={'folio' :contador + 1},
+                                       auth=(self.w.username.text(), self.w.password.text()))
+                except:
+                    continue
+
 
             #if contador == len(self.listaDeFacturasOrdenadas):
             pd.setLabelText("Creando Resumen...")
             for t in range(0,5):
-                time_old.sleep(0.2*len(self.listaDeFacturasOrdenadas))
+                time_old.sleep(0.05*len(self.listaDeFacturasOrdenadas))
                 pd.setValue(pd.value() + ( (100 - pd.value()) / 2))
 
 
@@ -559,20 +584,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
             contador = -1
 
-
-
-
-            for factura in self.listaDeFacturasOrdenadas:
-                try:
-                    contador += 1
-                    if os.path.isfile(join(self.esteFolder,factura.UUID+".pdf")):
-
-                        self.tableWidget_xml.setCellWidget(contador,0, ImgWidget1(self))
-                    else:
-                        self.tableWidget_xml.setCellWidget(contador,0, ImgWidget2(self))
-
-                except:
-                    print("no pude un xml")
+            # time_old.sleep(0.5*len(self.listaDeFacturasOrdenadas))
 
             self.imprimir.setEnabled(True)
 
@@ -586,31 +598,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
             pd.setValue(100)
             self.tableWidget_resumen.setItem(0,1,QTableWidgetItem("Resumen Diot"))
             self.tableWidget_resumen.setItem(0,2,QTableWidgetItem("Sumatoria del Periodo"))
-            self.tableWidget_resumen.setCellWidget(0,0, ImgWidget1(self))
-
-            # for factura in self.listaDeFacturasOrdenadas:
-            #     esteFile = factura.UUID + ".pdf"
-            #     try:
-            #         if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),esteFile)):
-            #             os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),esteFile))
-            #         #os.rename(os.path.join(self.esteFolder,esteFile), os.path.join(os.path.join(self.esteFolder,"huiini"),esteFile))
-            #     except:
-            #         QtGui.QMessageBox.information(self, "Information", "No fue posible mover " + esteFile)
-            #
-            # try:
-            #     if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf")):
-            #         os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
-            #     os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
-            # except:
-            #     QtGui.QMessageBox.information(self, "Information", "No fue posible mover resumenDiot.pdf")
-
-            for esteFile in listdir(self.esteFolder):
-                if esteFile.endswith(".tex") or esteFile.endswith(".aux") or esteFile.endswith(".log"):
-                    print("aqui borraria")
-                    try:
-                        os.remove(join(self.esteFolder,esteFile))
-                    except:
-                        QtGui.QMessageBox.information(self, "Information", "No fue posible borrar " + join(self.esteFolder,esteFile))
+            self.tableWidget_resumen.setCellWidget(0,0, ImgWidgetPalomita(self))
 
             #obtener los warnings de las facturas
             mensajeAlerta =""
@@ -619,7 +607,6 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
                     mensajeAlerta += factura.UUID + factura.mensaje + r'\n'
             if not mensajeAlerta == "":
                 QtGui.QMessageBox.information(self, "Information", mensajeAlerta)
-            #time_old.sleep(1)
 
             pd.hide()
 
