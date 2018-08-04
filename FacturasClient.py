@@ -115,7 +115,11 @@ class FacturaClient(object):
 
             self.conceptoDescripcionKey = "Descripcion"
             self.conceptoImporteKey = "Importe"
-            self.conceptoValorUnitarioKey = "Valorunitario"
+
+            self.claveUnidadKey = "ClaveUnidad"
+            self.clavePsKey = "ClaveProdServ"
+
+            self.conceptoValorUnitarioKey = "ValorUnitario"
             self.conceptoUnidadKey = "Unidad"
             self.conceptoCantidadKey = "Cantidad"
 
@@ -297,6 +301,8 @@ class FacturaClient(object):
         except:
             if impuesto == "Impuesto Sobre Hospedaje":
                 return "ISH"
+            else:
+                return impuesto
 
     def cosas_comunes_32_33(self):
 
@@ -363,7 +369,22 @@ class FacturaClient(object):
 
                         cantidad = self.latexStr(conceptoTag.get(self.conceptoCantidadKey))
 
-                        self.conceptos.append({"cantidad":cantidad, "unidad":unidad, "valorUnitario":valorUnitario, "importeConcepto":importeConcepto, "descripcion":descripcion})
+
+
+                        clave_unidad = "--"
+                        clave_ps = "--"
+                        impuesto = "--"
+                        if self.version == "3.3":
+                            clave_unidad = self.latexStr(conceptoTag.get(self.claveUnidadKey))
+                            clave_ps = self.latexStr(conceptoTag.get(self.clavePsKey))
+                            conceptoImpuestosTag = conceptoTag.find("{http://www.sat.gob.mx/cfd/3}Impuestos")
+                            if conceptoImpuestosTag == None:
+                                print("este cabron no trae impuestos")
+                            else:
+                                conceptoImpuestosTrasladoTag = conceptoImpuestosTag.find("{http://www.sat.gob.mx/cfd/3}Traslados")
+                                impuesto = conceptoImpuestosTrasladoTag[0].get("Importe")
+
+                        self.conceptos.append({"impuesto":impuesto, "clave_unidad":clave_unidad, "clave_ps":clave_ps, "cantidad":cantidad, "unidad":unidad, "valorUnitario":valorUnitario, "importeConcepto":importeConcepto, "descripcion":descripcion})
 
         self.retenciones = {"IVA":0,"ISR":0,"IEPS":0,"ISH":0,"TUA":0}
 
