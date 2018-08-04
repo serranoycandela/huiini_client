@@ -30,8 +30,8 @@ import hashlib
 #         # Implement my authentication
 #         return r
 
-#url_server = "http://192.168.15.19:8008"
-url_server = "http://huiini.pythonanywhere.com"
+url_server = "http://192.168.15.15:8008"
+#url_server = "http://huiini.pythonanywhere.com"
 
 
 try:
@@ -181,42 +181,12 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
         contador = 0
         tablaIndex = 0
-        listaAcotada = []
-        for key, value in self.diccionarioPorRFCs.items():
-            contador += 1
-            if contador > 60:
-                contador = 1
-                tablaIndex +=1
-                self.listaDiot.append(listaAcotada)
-                listaAcotada = []
-
-
-            listaAcotada.append({'rfc' : key,
-                                   'subTotal': value['subTotal'],
-                                   'descuento': value['descuento'],
-                                   'trasladoIVA': value['trasladoIVA'],
-                                   'importe': value['importe'],
-                                   'total': value['total']
-                                    })
-
-
-        listaAcotada.append({'rfc' : 'Suma',
-                               'subTotal': sumaSubTotal,
-                               'descuento': sumaDescuento,
-                               'trasladoIVA': sumaTrasladoIVA,
-                               'importe': sumaImporte,
-                                'total': sumaTotal
-                                })
-
-        self.listaDiot.append(listaAcotada)
-
-        for key, value in self.diccionarioPorRFCs.items():
-            print(key, value)
 
         #url_get = "http://huiini.pythonanywhere.com/resumen"
         url_get =  "%s/resumen/%s/" % (url_server, self.hash_carpeta)
 
-        r = requests.get(url_get, params={'lista_diot': json.dumps(self.listaDiot)}, stream=True, auth=(self.w.username.text(), self.w.password.text()))
+        r = requests.get(url_get, stream=True,
+                        auth=(self.w.username.text(), self.w.password.text()))
         time_old.sleep(1)
         if r.status_code == 200:
             with open(join(join(self.esteFolder,"huiini"), 'resumenDiot.pdf'),'wb') as f:
@@ -269,15 +239,22 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
         self.numeroDeFacturasValidas -= 1
         self.sumale(1)
+
+        url_get =  "%s/remove/%s/%s" % (url_server, self.hash_carpeta, elNombre)
+
+        r = requests.get(url_get, stream=True,
+                        auth=(self.w.username.text(), self.w.password.text()))
+
+
         self.hazResumenDiot(self.esteFolder)
-        try:
-            if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf")):
-
-                os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
-
-            os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
-        except:
-            QtGui.QMessageBox.information(self, "Information", "tienes abierto el resumenDiot.pdf")
+        # try:
+        #     if os.path.exists(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf")):
+        #
+        #         os.remove(os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
+        #
+        #     os.rename(os.path.join(self.esteFolder,"resumenDiot.pdf"), os.path.join(os.path.join(self.esteFolder,"huiini"),"resumenDiot.pdf"))
+        # except:
+        #     QtGui.QMessageBox.information(self, "Information", "tienes abierto el resumenDiot.pdf")
 
 
     def sumale(self, renglonResumen=0):
