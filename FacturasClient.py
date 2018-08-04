@@ -123,8 +123,8 @@ class FacturaClient(object):
             self.selloSATKey = "SelloSAT"
             self.noCertificadoSATKey = "NoCertificadoSAT"
 
-            self.ImpLocTrasladadoKey = "TotalTrasladado" ############################################## ???????????????????????????????????????????????
-            self.TasadeTrasladoKey = "TasaTraslado"         ######################################################## ???????????????????????????????????????????
+            self.ImpLocTrasladadoKey = "ImpLocTrasladado" ############################################## ???????????????????????????????????????????????
+            self.TasadeTrasladoKey = "TasadeTraslado"         ######################################################## ???????????????????????????????????????????
 
             self.totalImpuestosTrasladadosKey = "totalImpuestosTrasladados" #############################????????????????
             self.EmisorRegimen = self.latexStr(self.EmisorTag.get("RegimenFiscal"))
@@ -187,7 +187,7 @@ class FacturaClient(object):
             strBien = strBien.replace(u'\x7f', u"Ñ")
             strBien = strBien.replace(u'\xf3', u"ó")
             strBien = strBien.replace(u'\xd1', u"Ñ")
-			
+
 
 
 
@@ -281,18 +281,22 @@ class FacturaClient(object):
 
     def arreglaSusPendejadas(self, impuesto):
         ################################################################# nadie le creyó al macfly, se confirmo
-        if impuesto == "001":
-            return "ISR"
-        elif impuesto == "002":
-            return "IVA"
-        elif impuesto == "003":
-            return "ISH" ############################################################### ojo
-        elif impuesto == "004":
-            return "TUA"
-        elif impuesto == "005":
-            return "IEPS"
-        else:
-            return impuesto
+        try:
+            if int(impuesto) == 1:
+                return "ISR"
+            elif int(impuesto) == 2:
+                return "IVA"
+            elif int(impuesto) == 3:
+                return "ISH" ############################################################### ojo
+            elif int(impuesto) == 4:
+                return "TUA"
+            elif int(impuesto) == 5:
+                return "IEPS"
+            else:
+                return impuesto
+        except:
+            if impuesto == "Impuesto Sobre Hospedaje":
+                return "ISH"
 
     def cosas_comunes_32_33(self):
 
@@ -474,7 +478,7 @@ class FacturaClient(object):
                             impuestoLocal = self.latexStr(trasladosLocalesTag.get(self.ImpLocTrasladadoKey))###############################falta la version 3.3
                             tasaLocal = self.latexStr(trasladosLocalesTag.get(self.TasadeTrasladoKey))
                             importeLocal = self.latexStr(trasladosLocalesTag.get("Importe"))
-
+                            #print(self.UUID, importeLocal, self.arreglaSusPendejadas(impuestoLocal))
     #                         if self.trasladosLocales[self.arreglaSusPendejadas(impuestoLocal)]["importe"] == 0:
     #                             self.trasladosLocales[self.arreglaSusPendejadas(impuestoLocal)]["tasa"] = "NA"
     #                         else:
@@ -483,11 +487,11 @@ class FacturaClient(object):
                                 self.trasladosLocales[self.arreglaSusPendejadas(impuestoLocal)]["tasa"] = tasaLocal
                                 self.trasladosLocales[self.arreglaSusPendejadas(impuestoLocal)]["importe"] += float(importeLocal)
                             except:
-                                print("no pude sumar " + self.UUID)
-                                self.mensaje += " no pudo sumar un traslado local"
+                                print("no pude sumar ", self.UUID, str(importeLocal), str(tasaLocal), impuestoLocal, self.arreglaSusPendejadas(impuestoLocal))
+                                self.mensaje += " no pudo sumar un traslado local 1"
                         except:
-                            print("no pude sumar " + self.UUID)
-                            self.mensaje += " no pudo sumar un traslado local"
+
+                            self.mensaje += " no pudo sumar un traslado local 2" + self.arreglaSusPendejadas(impuestoLocal)
 
                         #self.sumaDeTrasladosLocales += float(importeLocal)
 
