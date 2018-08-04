@@ -74,11 +74,27 @@ class MyPopup(QWidget):
         self.btn = QPushButton('Login')
         layout.addWidget(self.btn)
 
+        self.reset_pw_label = QLabel()
+        self.reset_pw_label.setOpenExternalLinks(True)
+        self.reset_pw_label.setText("<a href=\"%s/accounts/password_reset/\">'password reset'</a>" % url_server )
+        layout.addWidget(self.reset_pw_label)
+
         # Connect its clicked signal to our slot
         self.btn.clicked.connect(self.clicked_slot)
+
         self.setWindowModality(Qt.ApplicationModal)
         self.raise_()
         self.activateWindow()
+
+    def closeEvent(self, event):
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        app = QtGui.QApplication.instance()
+        app.closeAllWindows()
+        # do stuff
+        # if can_exit:
+        #     event.accept() # let the window close
+        # else:
+        #     event.ignore()
 
     @Slot()
     def clicked_slot(self):
