@@ -3,7 +3,7 @@ from PySide.QtCore import *
 import requests
 from PySide.QtCore import Qt
 from PySide.QtGui import *
-from PySide import QtGui
+from PySide import QtGui, QtCore
 import sys
 import guiV2
 from os import listdir
@@ -20,6 +20,7 @@ import json
 from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import hashlib
+import descarga
 
 
 
@@ -30,8 +31,8 @@ import hashlib
 #         # Implement my authentication
 #         return r
 
-url_server = "http://192.168.15.15:8008"
-#url_server = "http://huiini.pythonanywhere.com"
+#url_server = "http://192.168.15.15:8008"
+url_server = "http://huiini.pythonanywhere.com"
 
 
 try:
@@ -113,6 +114,89 @@ class MyPopup(QWidget):
 #         dc.drawLine(0, 0, 100, 100)
 #         dc.drawLine(100, 0, 0, 100)
 #
+
+class MyPopup_d(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        # Dialog.setObjectName("Dialog")
+        # Dialog.resize(400, 300)
+        self.setWindowTitle("Descarga masiva")
+        layout = QGridLayout()
+        self.setLayout(layout)
+        self.label = QtGui.QLabel("e_firma")
+        self.label.setGeometry(QtCore.QRect(60, 30, 46, 13))
+        self.label.setObjectName("label")
+        layout.addWidget(self.label,0,0)
+        self.e_firma = QtGui.QPushButton("...")
+        self.e_firma.setGeometry(QtCore.QRect(250, 30, 75, 23))
+        self.e_firma.setObjectName("e_firma")
+        layout.addWidget(self.e_firma,0,1)
+        self.label_2 = QtGui.QLabel("fecha inicial")
+        self.label_2.setGeometry(QtCore.QRect(60, 80, 71, 21))
+        self.label_2.setObjectName("label_2")
+        layout.addWidget(self.label_2,1,0)
+        self.dateEdit = QtGui.QDateEdit()
+        self.dateEdit.setGeometry(QtCore.QRect(230, 80, 110, 22))
+        self.dateEdit.setObjectName("dateEdit")
+        self.dateEdit.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.dateEdit.setCalendarPopup(True)
+        layout.addWidget(self.dateEdit,1,1)
+        self.dateEdit_2 = QtGui.QDateEdit()
+        self.dateEdit_2.setGeometry(QtCore.QRect(230, 130, 110, 22))
+        self.dateEdit_2.setObjectName("dateEdit_2")
+        self.dateEdit_2.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.dateEdit_2.setCalendarPopup(True)
+        layout.addWidget(self.dateEdit_2,2,1)
+
+
+        self.label_3 = QtGui.QLabel("fecha final")
+        self.label_3.setGeometry(QtCore.QRect(60, 130, 71, 16))
+        self.label_3.setObjectName("label_3")
+        layout.addWidget(self.label_3,2,0)
+        self.buttonBox = QtGui.QDialogButtonBox()
+        self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        layout.addWidget(self.buttonBox, 3,0)
+
+#        self.retranslateUi(self)
+#        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), self.accept)#
+##        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), self.reject)
+#        QtCore.QMetaObject.connectSlotsByName(self)
+
+    # def retranslateUi(self, Dialog):
+    #     Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+    #     self.e_firma.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
+    #     self.label.setText(QtGui.QApplication.translate("Dialog", "e.firma", None, QtGui.QApplication.UnicodeUTF8))
+    #     self.label_2.setText(QtGui.QApplication.translate("Dialog", "fecha inicial", None, QtGui.QApplication.UnicodeUTF8))
+    #     self.label_3.setText(QtGui.QApplication.translate("Dialog", "fecha final", None, QtGui.QApplication.UnicodeUTF8))
+
+
+        self.e_firma.clicked.connect(self.cual_e_firma)
+
+    def cual_e_firma(self):
+        esteFileChooser = QFileDialog()
+        path = "C:/Users/"
+        filter = "pem(*.pem)"
+        f = QFileDialog.getOpenFileName(esteFileChooser, "selcciona archivo .pem", path, filter)
+        print f[0]
+        # esteFileChooser.setFileMode(QFileDialog.)
+        # if esteFileChooser.exec_():
+        #
+        #     self.esteFolder = esteFileChooser.selectedFiles()[0] + "/"
+
+
+
+# class descarga_popup(descarga.Ui_Dialog):
+#     # def __init__(self):
+#     #     descarga.Ui_Dialog.__init__(self)
+#     #     self.e_firma.connect.clicked(clicked_slot)
+#     @Slot()
+#     def clicked_slot(self):
+#         ''' This is called when the button is clicked. '''
+#         print("nelson")
+
 class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
 
     def __init__(self, parent=None):
@@ -125,6 +209,7 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.pdflatex_path = "C:/Program Files/MiKTeX 2.9/miktex/bin/x64/pdflatex.exe"
 
         self.carpetaChooser.clicked.connect(self.cualCarpeta)
+        self.descarga_bt.clicked.connect(self.descarga_mesta)
         self.imprimir.clicked.connect(self.imprime)
 
         self.impresora.clicked.connect(self.cambiaImpresora)
@@ -174,6 +259,11 @@ class Ui_MainWindow(QMainWindow, guiV2.Ui_MainWindow):
         self.tableWidget_resumen.cellDoubleClicked.connect(self.meDoblePicaronResumen)
 
 
+    def descarga_mesta(self):
+        print ("Opening a new popup window...")
+        self.d = MyPopup_d()
+        self.d.setGeometry(QRect(100, 100, 400, 200))
+        self.d.show()
     def doit(self):
         print ("Opening a new popup window...")
         self.w = MyPopup()

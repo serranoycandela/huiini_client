@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindowV2.ui'
 #
-# Created: Sun Sep 17 13:07:32 2017
+# Created: Sat Oct 06 14:09:49 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.carpetaChooser = QtGui.QPushButton(self.centralWidget)
-        self.carpetaChooser.setGeometry(QtCore.QRect(40, 460, 171, 31))
+        self.carpetaChooser.setGeometry(QtCore.QRect(50, 440, 171, 31))
         self.carpetaChooser.setObjectName("carpetaChooser")
         self.impresora = QtGui.QPushButton(self.centralWidget)
         self.impresora.setGeometry(QtCore.QRect(730, 580, 211, 31))
@@ -55,9 +55,12 @@ class Ui_MainWindow(object):
         self.tableWidget_resumen.horizontalHeader().setMinimumSectionSize(50)
         self.tableWidget_resumen.verticalHeader().setVisible(False)
         self.labelLogo = QtGui.QLabel(self.centralWidget)
-        self.labelLogo.setGeometry(QtCore.QRect(50, 520, 141, 101))
+        self.labelLogo.setGeometry(QtCore.QRect(80, 520, 131, 91))
         self.labelLogo.setText("")
         self.labelLogo.setObjectName("labelLogo")
+        self.descarga_bt = QtGui.QPushButton(self.centralWidget)
+        self.descarga_bt.setGeometry(QtCore.QRect(50, 470, 171, 23))
+        self.descarga_bt.setObjectName("descarga_bt")
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1342, 21))
@@ -79,4 +82,5 @@ class Ui_MainWindow(object):
         self.impresora.setText(QtGui.QApplication.translate("MainWindow", "Selecciona Impresora", None, QtGui.QApplication.UnicodeUTF8))
         self.imprimir.setText(QtGui.QApplication.translate("MainWindow", "Imprimir", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidget_xml.setSortingEnabled(True)
+        self.descarga_bt.setText(QtGui.QApplication.translate("MainWindow", "Descarga SAT", None, QtGui.QApplication.UnicodeUTF8))
 
